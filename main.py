@@ -45,7 +45,7 @@ database.init_db()
 _DEFAULT_ALLOWED_HOSTS = (
     "localhost,127.0.0.1,[::1],"
     "*.trycloudflare.com,*.ngrok-free.app,*.ngrok-free.dev,*.ngrok.app,"
-    "*.ngrok.io,*.loca.lt"
+    "*.ngrok.io,*.loca.lt,*.railway.app"  # <-- Yeh wala add kar dein
 )
 ALLOWED_HOSTS = [
     host.strip()

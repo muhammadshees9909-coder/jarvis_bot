@@ -275,3 +275,30 @@ Cloudflare Tunnel start ho raha hai: tunnel --url http://127.0.0.1:8000 --no-aut
   https://compaq-stephanie-explosion-greensboro.trycloudflare.com
 ================================================================
 
+[BACKEND] local /health jawab nahi de raha — backend restart kar raha hoon (tunnel aur URL wahi rahenge) ...
+Backend preflight: http://127.0.0.1:8000/health ...
+Backend OK — tunnel start kar raha hoon.
+
+[Sun 11/15/2026 13:33:23.24] run_hidden.bat starting tunnel 
+================================================================
+  JARVIS Remote Access — secure HTTPS tunnel (supervised)
+  Local server : http://127.0.0.1:8000
+================================================================
+Backend preflight: http://127.0.0.1:8000/health ...
+Backend OK — tunnel start kar raha hoon.
+
+Backend preflight: http://127.0.0.1:8000/health ...
+Backend OK — tunnel start kar raha hoon.
+
+Cloudflare Tunnel start ho raha hai: tunnel --url http://127.0.0.1:8000 --no-autoupdate --protocol http2 --edge-ip-version 4
+
+
+================================================================
+  JARVIS PUBLIC URL  (phone / kisi bhi network se kholein)
+  https://politics-inserted-extract-terrorists.trycloudflare.com
+================================================================
+
+[BACKEND] local /health jawab nahi de raha — backend restart kar raha hoon (tunnel aur URL wahi rahenge) ...
+Backend preflight: http://127.0.0.1:8000/health ...
+Backend OK — tunnel start kar raha hoon.
+
