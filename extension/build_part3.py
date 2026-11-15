@@ -1,0 +1,61 @@
+
+lines = []
+
+# Helper functions
+lines.append("")
+lines.append("function escapeHtml(str) {")
+lines.append("  const div = document.createElement('div');")
+lines.append("  div.textContent = str;")
+lines.append("  return div.innerHTML;")
+lines.append("}")
+
+lines.append("")
+lines.append("function setLoading(loading) {")
+lines.append("  STATE.submitting = loading;")
+lines.append("  const list = STATE.messages;")
+lines.append("  const last = list.lastElementChild;")
+lines.append("  if (loading) {")
+lines.append("    const el = document.createElement('div');")
+lines.append('    el.className = "jarvis-message jarvis-loading";')
+lines.append('    el.textContent = "Thinking...";')
+lines.append("    list.appendChild(el);")
+lines.append("  } else if (last && last.classList.contains('jarvis-loading')) {")
+lines.append("    last.remove();")
+lines.append("  }")
+lines.append("  list.scrollTop = list.scrollHeight;")
+lines.append("}")
+
+# Render response
+lines.append("")
+lines.append("function renderResponse(text) {")
+lines.append("  const list = STATE.messages;")
+lines.append("  const el = document.createElement('div');")
+lines.append('  el.className = "jarvis-message jarvis-assistant";')
+lines.append('  el.innerHTML = escapeHtml(text) + \'<span class="jarvis-meta">Just now</span>\';')
+lines.append("  list.appendChild(el);")
+lines.append("  list.scrollTop = list.scrollHeight;")
+lines.append("}")
+
+# Quick replies
+lines.append("")
+lines.append("function renderQuickReplies(replies) {")
+lines.append("  const container = STATE.quickRepl;")
+lines.append("  if (!Array.isArray(replies) || replies.length === 0) {")
+lines.append("    container.innerHTML = '';")
+lines.append("    return;")
+lines.append("  }")
+lines.append("  container.innerHTML = '';")
+lines.append("  for (const r of replies) {")
+lines.append("    const btn = document.createElement('button');")
+lines.append('    btn.className = "jarvis-quick-btn";')
+lines.append('    btn.textContent = r.label || r.text || r;')
+lines.append("    btn.addEventListener('click', function() {")
+lines.append("      STATE.textarea.value = r.value || r;")
+lines.append("      STATE.textarea.dispatchEvent(new Event('input'));")
+lines.append("      sendMessage();")
+lines.append("    });")
+lines.append("    container.appendChild(btn);")
+lines.append("  }")
+
+with open(r"c:/jarvis-bot/extension/part3.txt", "w", encoding="utf-8") as f:
+    f.write("\n".join(lines))

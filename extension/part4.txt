@@ -1,0 +1,59 @@
+
+async function sendMessage() {
+  const text = STATE.textarea.value.trim();
+  if (!text || STATE.submitting) return;
+  STATE.messageId += 1;
+
+  const userEl = document.createElement('div');
+  userEl.className = "jarvis-message jarvis-user";
+  userEl.textContent = text;
+  STATE.messages.appendChild(userEl);
+  STATE.messages.scrollTop = STATE.messages.scrollHeight;
+
+  STATE.textarea.value = '';
+  STATE.textarea.dispatchEvent(new Event('input'));
+  setLoading(true);
+  STATE.btnSend.style.opacity = "0.5";
+  STATE.btnSend.style.cursor = "default";
+
+  try {
+    const payload = {
+      message: text,
+      session_id: STATE.sessionId
+    };
+    const data = await chatFetch(payload);
+    STATE.sessionId = data.session_id || STATE.sessionId;
+
+    if (data.error) {
+      showError(data.error);
+    } else {
+      renderResponse(data.response);
+    }
+    renderQuickReplies(data.quick_replies || data.quickReplies || []);
+  } catch (err) {
+    showError("Request failed: " + err.message);
+  } finally {
+    setLoading(false);
+    STATE.btnSend.style.opacity = "1";
+    STATE.btnSend.style.cursor = "pointer";
+  }
+}
+
+function openCard() {
+  if (STATE.docked || STATE.open) return;
+  STATE.open = true;
+  STATE.card.classList.remove('closed');
+  STATE.card.style.opacity = "1";
+  STATE.card.style.transform = "scale(1) translateY(0)";
+  STATE.bubble.style.display = "none";
+  setTimeout(function() { STATE.textarea.focus(); }, 100);
+}
+
+function closeCard() {
+  if (!STATE.open) return;
+  STATE.open = false;
+  STATE.card.classList.add('closed');
+  STATE.card.style.opacity = "0";
+  STATE.card.style.transform = "scale(0.88) translateY(20px)";
+  STATE.bubble.style.display = "flex";
+}

@@ -1,0 +1,82 @@
+
+function setMode(docked) {
+  STATE.docked = docked;
+  if (docked) {
+    STATE.card.style.bottom = "0";
+    STATE.card.style.right = "0";
+    STATE.card.style.left = "0";
+    STATE.card.style.width = "100%";
+    STATE.card.style.height = "100%";
+    STATE.card.style.minHeight = "auto";
+    STATE.card.style.borderRadius = "0";
+    STATE.card.style.boxShadow = "none";
+    STATE.bubble.style.bottom = "16px";
+    STATE.bubble.style.right = "16px";
+    STATE.hint.textContent = "JARVIS is docked as a full side panel. Click the bubble to hide it.";
+  } else {
+    STATE.card.style.bottom = "calc(var(--bubble-gap) + var(--bubble-size) + var(--bubble-gap))";
+    STATE.card.style.right = "var(--bubble-gap)";
+    STATE.card.style.left = "auto";
+    STATE.card.style.width = "var(--card-width)";
+    STATE.card.style.height = "auto";
+    STATE.card.style.minHeight = "var(--card-min-height)";
+    STATE.card.style.borderRadius = "var(--radius-lg)";
+    STATE.card.style.boxShadow = "var(--glass-shadow-lg)";
+    STATE.bubble.style.bottom = "var(--bubble-gap)";
+    STATE.bubble.style.right = "var(--bubble-gap)";
+    STATE.hint.textContent = "Tip: dock as a side panel for a full conversation window. Click the card header to collapse.";
+  }
+  requestAnimationFrame(function() {
+    if (!STATE.docked && STATE.open) {
+      STATE.card.classList.remove('closed');
+      STATE.card.style.opacity = "1";
+      STATE.card.style.transform = "scale(1) translateY(0)";
+    } else if (STATE.docked) {
+      STATE.card.style.opacity = "1";
+      STATE.card.style.transform = "scale(1) translateY(0)";
+    }
+  });
+}
+
+function bindEvents() {
+  STATE.bubble.addEventListener('click', function() {
+    if (STATE.docked) {
+      STATE.card.classList.add('closed');
+      STATE.card.style.opacity = "0";
+      STATE.card.style.transform = "scale(1) translateY(100%)";
+      STATE.bubble.style.display = "flex";
+    } else {
+      STATE.open ? closeCard() : openCard();
+    }
+  });
+
+  STATE.card.addEventListener('click', function(e) {
+    if (e.target.closest('#jarvis-card')) return;
+    if (!STATE.docked && STATE.open) closeCard();
+  });
+
+  STATE.btnFloat.addEventListener('click', function() { if (STATE.docked) setMode(false); });
+  STATE.btnSide.addEventListener('click', function() { if (!STATE.docked) setMode(true); });
+  STATE.btnBack.addEventListener('click', function() {
+    if (STATE.docked) setMode(false);
+    else if (STATE.open) closeCard();
+  });
+
+  STATE.quickRepl.addEventListener('click', function() {
+    if (STATE.open && !STATE.docked) closeCard();
+  });
+
+  STATE.sendBtn.addEventListener('click', sendMessage);
+
+  STATE.textarea.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  });
+
+  STATE.textarea.addEventListener('input', function() {
+    STATE.textarea.style.height = "auto";
+    STATE.textarea.style.height = Math.min(STATE.textarea.scrollHeight, 120) + "px";
+  });
+}

@@ -1,0 +1,21 @@
+
+function init() {
+  injectWidget();
+  bindEvents();
+  fetch(chrome.runtime.getURL('content.css'))
+    .then(function(r) { return r.text(); })
+    .then(function(css) { return injectCss(css); })
+    .catch(function(err) { console.warn('[JARVIS] Failed to load CSS:', err); });
+  if (STATE.docked) setMode(true);
+  console.log("[JARVIS] Floating glass assistant ready.");
+}
+
+if (!document.getElementById('jarvis-root')) {
+  injectWidget();
+  bindEvents();
+  fetch(chrome.runtime.getURL('content.css'))
+    .then(function(r) { return r.text(); })
+    .then(function(css) { return injectCss(css); })
+    .catch(function(err) { console.warn('[JARVIS] Failed to load CSS:', err); });
+  console.log("[JARVIS] Floating glass assistant ready.");
+}

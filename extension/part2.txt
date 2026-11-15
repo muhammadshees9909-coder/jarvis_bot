@@ -1,0 +1,64 @@
+
+const WIDGET_HTML = [
+  '<div id="jarvis-root">',
+  '  <button id="jarvis-bubble" aria-label="Toggle JARVIS assistant">',
+  '    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>',
+  '  </button>',
+  '  <div id="jarvis-card" class="closed">',
+  '    <header>',
+  '      <div class="jarvis-title">',
+  '        <span class="jarvis-icon">',
+  '          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>',
+  '        </span>',
+  '        <span class="jarvis-label">JARVIS</span>',
+  '      </div>',
+  '      <div class="jarvis-actions">',
+  '        <div class="jarvis-control-group">',
+  '          <button class="jarvis-control-btn" id="jarvis-btn-floating">',
+  '            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg>',
+  '          </button>',
+  '          <button class="jarvis-control-btn" id="jarvis-btn-sidebar">',
+  '            <svg viewBox="0 0 24 24"><path d="M22 12h-6V7.5L18 2.5 16 4.5l-4 4v6h2v-2h4v2h2z"/></svg>',
+  '          </button>',
+  '          <button class="jarvis-control-btn" id="jarvis-btn-back">',
+  '            <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>',
+  '          </button>',
+  '        </div>',
+  '      </div>',
+  '    </header>',
+  '    <div id="jarvis-messages">',
+  '      <div class="jarvis-message jarvis-assistant">',
+  '        <div class="jarvis-meta">Say something to get started...</div>',
+  '      </div>',
+  '    </div>',
+  '    <div id="jarvis-input-area">',
+  '      <textarea id="jarvis-textarea" rows="1" placeholder="Type your message..."></textarea>',
+  '      <button class="jarvis-send-btn" id="jarvis-send-btn">',
+  '        <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>',
+  '      </button>',
+  '    </div>',
+  '  </div>',
+  '</div>',
+].join("\n");
+
+function injectWidget() {
+  const root = document.createElement('div');
+  root.innerHTML = WIDGET_HTML;
+  document.body.appendChild(root);
+
+  STATE.root = $('#jarvis-root');
+  STATE.bubble = $('#jarvis-bubble');
+  STATE.card = $('#jarvis-card');
+  STATE.messages = $('#jarvis-messages');
+  STATE.textarea = $('#jarvis-textarea');
+  STATE.sendBtn = $('#jarvis-send-btn');
+  STATE.quickRepl = $('#jarvis-quick-replies');
+  STATE.hint = $('#jarvis-hint');
+  STATE.btnFloat = $('#jarvis-btn-floating');
+  STATE.btnSide = $('#jarvis-btn-sidebar');
+  STATE.btnBack = $('#jarvis-btn-back');
+
+  STATE.card.classList.add('closed');
+  STATE.card.style.opacity = "0";
+  STATE.card.style.transform = "scale(0.88) translateY(20px)";
+}

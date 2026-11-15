@@ -1,0 +1,277 @@
+[Sun 11/15/2026  9:01:02.21] run_hidden.bat starting tunnel 
+================================================================
+  JARVIS Remote Access — secure HTTPS tunnel (supervised)
+  Local server : http://127.0.0.1:8000
+================================================================
+Backend preflight: http://127.0.0.1:8000/health ...
+Backend OK — tunnel start kar raha hoon.
+
+Backend preflight: http://127.0.0.1:8000/health ...
+Backend OK — tunnel start kar raha hoon.
+
+Cloudflare Tunnel start ho raha hai: tunnel --url http://127.0.0.1:8000 --no-autoupdate --protocol http2 --edge-ip-version 4
+
+
+================================================================
+  JARVIS PUBLIC URL  (phone / kisi bhi network se kholein)
+  https://winter-starring-promoting-restaurant.trycloudflare.com
+================================================================
+
+[TUNNEL] https://winter-starring-promoting-restaurant.trycloudflare.com band ho gaya — cloudflared output stream closed (55s chala).
+[RETRY] 6s baad naya tunnel banaya jayega (attempt 1).
+
+Backend preflight: http://127.0.0.1:8000/health ...
+Backend OK — tunnel start kar raha hoon.
+
+Cloudflare Tunnel start ho raha hai: tunnel --url http://127.0.0.1:8000 --no-autoupdate --protocol http2 --edge-ip-version 4
+
+
+================================================================
+  JARVIS PUBLIC URL  (phone / kisi bhi network se kholein)
+  https://paintings-nvidia-frequent-drain.trycloudflare.com
+================================================================
+
+[TUNNEL] https://paintings-nvidia-frequent-drain.trycloudflare.com band ho gaya — cloudflared output stream closed (23s chala).
+[RETRY] 10s baad naya tunnel banaya jayega (attempt 2).
+
+Backend preflight: http://127.0.0.1:8000/health ...
+Backend OK — tunnel start kar raha hoon.
+
+Cloudflare Tunnel start ho raha hai: tunnel --url http://127.0.0.1:8000 --no-autoupdate --protocol http2 --edge-ip-version 4
+
+
+================================================================
+  JARVIS PUBLIC URL  (phone / kisi bhi network se kholein)
+  https://leaf-first-hearts-focus.trycloudflare.com
+================================================================
+
+[TUNNEL] https://leaf-first-hearts-focus.trycloudflare.com band ho gaya — cloudflared output stream closed (41s chala).
+[RETRY] 21s baad naya tunnel banaya jayega (attempt 3).
+
+[CLEANUP] purane processes hata diye — cloudflared: none, tunnel.py: [19416, 9792]
+Backend preflight: http://127.0.0.1:8000/health ...
+Backend OK — tunnel start kar raha hoon.
+
+Cloudflare Tunnel start ho raha hai: tunnel --url http://127.0.0.1:8000 --no-autoupdate --protocol http2 --edge-ip-version 4
+
+
+================================================================
+  JARVIS PUBLIC URL  (phone / kisi bhi network se kholein)
+  https://cornwall-packed-cause-customise.trycloudflare.com
+================================================================
+
+[PROBE] public URL jawab nahi de raha (1/3): https://cornwall-packed-cause-customise.trycloudflare.com
+2026-11-15T19:00:28Z ERR Failed to refresh DNS local resolver error="lookup region1.v2.argotunnel.com: i/o timeout"
+2026-11-15T19:00:28Z ERR Serve tunnel error error="connection with edge closed" connIndex=0 event=0 ip=198.41.200.43
+2026-11-15T19:00:28Z ERR failed to serve incoming request error="Error shutting down control stream: context canceled"
+2026-11-15T19:00:29Z ERR Connection terminated error="connection with edge closed" connIndex=0
+[PROBE] public URL jawab nahi de raha (2/3): https://cornwall-packed-cause-customise.trycloudflare.com
+2026-11-15T19:00:47Z ERR failed to serve incoming request error="Unauthorized: Tunnel not found"
+2026-11-15T19:00:47Z ERR Register tunnel error from server side error="Unauthorized: Tunnel not found" connIndex=0 event=0 ip=198.41.200.43
+2026-11-15T19:00:49Z ERR Connection terminated error="Unauthorized: Tunnel not found" connIndex=0
+[PROBE] public URL jawab nahi de raha (3/3): https://cornwall-packed-cause-customise.trycloudflare.com
+[TUNNEL] https://cornwall-packed-cause-customise.trycloudflare.com band ho gaya — public URL 3x unreachable (6990s chala).
+[RETRY] 6s baad naya tunnel banaya jayega (attempt 1).
+
+Backend preflight: http://127.0.0.1:8000/health ...
+Backend OK — tunnel start kar raha hoon.
+
+Cloudflare Tunnel start ho raha hai: tunnel --url http://127.0.0.1:8000 --no-autoupdate --protocol http2 --edge-ip-version 4
+
+
+================================================================
+  JARVIS PUBLIC URL  (phone / kisi bhi network se kholein)
+  https://cord-instead-organizations-flip.trycloudflare.com
+================================================================
+
+[PROBE] public URL jawab nahi de raha (1/3): https://cord-instead-organizations-flip.trycloudflare.com
+2026-11-15T19:13:16Z ERR Serve tunnel error error="connection with edge closed" connIndex=0 event=0 ip=198.41.200.53
+2026-11-15T19:13:16Z ERR failed to serve incoming request error="Error shutting down control stream: context canceled"
+2026-11-15T19:13:17Z ERR Connection terminated error="connection with edge closed" connIndex=0
+[PROBE] public URL jawab nahi de raha (2/3): https://cord-instead-organizations-flip.trycloudflare.com
+[TUNNEL] https://cord-instead-organizations-flip.trycloudflare.com band ho gaya — cloudflared output stream closed (904s chala).
+[RETRY] 6s baad naya tunnel banaya jayega (attempt 1).
+
+Backend preflight: http://127.0.0.1:8000/health ...
+Backend OK — tunnel start kar raha hoon.
+
+Cloudflare Tunnel start ho raha hai: tunnel --url http://127.0.0.1:8000 --no-autoupdate --protocol http2 --edge-ip-version 4
+
+[TUNNEL] Cloudflare ne koi URL nahi diya — cloudflared output stream closed.
+        Last cloudflared output:
+          2026-11-15T19:16:24Z INF Thank you for trying Cloudflare Tunnel. Doing so, without a Cloudflare account, is a quick way to experiment and try it out. However, be aware that these account-less Tunnels have no uptime guarantee, are subject to the Cloudflare Online Services Terms of Use (https://www.cloudflare.com/website-terms/), and Cloudflare reserves the right to investigate your use of Tunnels for violations of such terms. If you intend to use Tunnels in production you should use a pre-created named tunnel by following: https://developers.cloudflare.com/cloudflare-one/connections/connect-apps
+          2026-11-15T19:16:24Z INF Requesting new quick Tunnel on trycloudflare.com...
+[RETRY] 11s baad naya tunnel banaya jayega (attempt 2).
+
+[Sun 11/15/2026 11:16:53.77] run_hidden.bat starting tunnel 
+================================================================
+  JARVIS Remote Access — secure HTTPS tunnel (supervised)
+  Local server : http://127.0.0.1:8000
+================================================================
+Backend preflight: http://127.0.0.1:8000/health ...
+Backend OK — tunnel start kar raha hoon.
+
+Backend preflight: http://127.0.0.1:8000/health ...
+Backend OK — tunnel start kar raha hoon.
+
+Cloudflare Tunnel start ho raha hai: tunnel --url http://127.0.0.1:8000 --no-autoupdate --protocol http2 --edge-ip-version 4
+
+
+================================================================
+  JARVIS PUBLIC URL  (phone / kisi bhi network se kholein)
+  https://reduction-tsunami-von-greensboro.trycloudflare.com
+================================================================
+
+[PROBE] public URL jawab nahi de raha (1/3): https://reduction-tsunami-von-greensboro.trycloudflare.com
+2026-11-15T19:36:17Z ERR  error="Incoming request ended abruptly: context canceled" connIndex=0 event=1 ingressRule=0 originService=http://127.0.0.1:8000
+2026-11-15T19:36:17Z ERR failed to serve incoming request error="failed to proxy HTTP: Incoming request ended abruptly: context canceled"
+2026-11-15T19:36:17Z ERR  error="Incoming request ended abruptly: context canceled" connIndex=0 event=1 ingressRule=0 originService=http://127.0.0.1:8000
+2026-11-15T19:36:17Z ERR failed to serve incoming request error="failed to proxy HTTP: Incoming request ended abruptly: context canceled"
+2026-11-15T19:36:17Z ERR  error="Incoming request ended abruptly: context canceled" connIndex=0 event=1 ingressRule=0 originService=http://127.0.0.1:8000
+2026-11-15T19:36:17Z ERR failed to serve incoming request error="failed to proxy HTTP: Incoming request ended abruptly: context canceled"
+2026-11-15T19:36:17Z ERR Serve tunnel error error="connection with edge closed" connIndex=0 event=0 ip=198.41.200.43
+2026-11-15T19:36:17Z ERR failed to serve incoming request error="Error shutting down control stream: client disconnected"
+2026-11-15T19:36:19Z ERR Connection terminated error="connection with edge closed" connIndex=0
+[PROBE] public URL jawab nahi de raha (2/3): https://reduction-tsunami-von-greensboro.trycloudflare.com
+2026-11-15T19:36:43Z ERR Unable to establish connection with Cloudflare edge error="DialContext error: dial tcp 198.41.200.43:7844: i/o timeout" connIndex=0 event=0 ip=198.41.200.43
+2026-11-15T19:36:43Z ERR Serve tunnel error error="DialContext error: dial tcp 198.41.200.43:7844: i/o timeout" connIndex=0 event=0 ip=198.41.200.43
+2026-11-15T19:36:46Z ERR Connection terminated error="DialContext error: dial tcp 198.41.200.43:7844: i/o timeout" connIndex=0
+[PROBE] public URL jawab nahi de raha (3/3): https://reduction-tsunami-von-greensboro.trycloudflare.com
+[TUNNEL] https://reduction-tsunami-von-greensboro.trycloudflare.com band ho gaya — public URL 3x unreachable (1187s chala).
+[RETRY] 5s baad naya tunnel banaya jayega (attempt 1).
+
+Backend preflight: http://127.0.0.1:8000/health ...
+Backend OK — tunnel start kar raha hoon.
+
+Cloudflare Tunnel start ho raha hai: tunnel --url http://127.0.0.1:8000 --no-autoupdate --protocol http2 --edge-ip-version 4
+
+
+================================================================
+  JARVIS PUBLIC URL  (phone / kisi bhi network se kholein)
+  https://evanescence-extra-agency-adams.trycloudflare.com
+================================================================
+
+[Sun 11/15/2026 11:52:08.88] run_hidden.bat starting tunnel 
+================================================================
+  JARVIS Remote Access — secure HTTPS tunnel (supervised)
+  Local server : http://127.0.0.1:8000
+================================================================
+Backend preflight: http://127.0.0.1:8000/health ...
+Backend OK — tunnel start kar raha hoon.
+
+[Sun 11/15/2026 11:52:16.98] run_hidden.bat starting tunnel 
+================================================================
+  JARVIS Remote Access — secure HTTPS tunnel (supervised)
+  Local server : http://127.0.0.1:8000
+================================================================
+Backend preflight: http://127.0.0.1:8000/health ...
+Backend OK — tunnel start kar raha hoon.
+
+Backend preflight: http://127.0.0.1:8000/health ...
+Backend OK — tunnel start kar raha hoon.
+
+Cloudflare Tunnel start ho raha hai: tunnel --url http://127.0.0.1:8000 --no-autoupdate --protocol http2 --edge-ip-version 4
+
+
+================================================================
+  JARVIS PUBLIC URL  (phone / kisi bhi network se kholein)
+  https://twice-corners-damages-tin.trycloudflare.com
+================================================================
+
+2026-11-15T19:56:07Z ERR  error="Incoming request ended abruptly: context canceled" connIndex=0 event=1 ingressRule=0 originService=http://127.0.0.1:8000
+2026-11-15T19:56:07Z ERR  error="Incoming request ended abruptly: context canceled" connIndex=0 event=1 ingressRule=0 originService=http://127.0.0.1:8000
+2026-11-15T19:56:07Z ERR  error="Incoming request ended abruptly: context canceled" connIndex=0 event=1 ingressRule=0 originService=http://127.0.0.1:8000
+2026-11-15T19:56:07Z ERR failed to serve incoming request error="failed to proxy HTTP: Incoming request ended abruptly: context canceled"
+2026-11-15T19:56:07Z ERR failed to serve incoming request error="failed to proxy HTTP: Incoming request ended abruptly: context canceled"
+2026-11-15T19:56:07Z ERR failed to serve incoming request error="failed to proxy HTTP: Incoming request ended abruptly: context canceled"
+[PROBE] public URL jawab nahi de raha (1/3): https://twice-corners-damages-tin.trycloudflare.com
+2026-11-15T20:29:15Z ERR Failed to refresh DNS local resolver error="lookup region1.v2.argotunnel.com: i/o timeout"
+2026-11-15T20:29:25Z ERR Serve tunnel error error="connection with edge closed" connIndex=0 event=0 ip=198.41.200.43
+2026-11-15T20:29:25Z ERR failed to serve incoming request error="Error shutting down control stream: client disconnected"
+2026-11-15T20:29:27Z ERR Connection terminated error="connection with edge closed" connIndex=0
+[PROBE] public URL jawab nahi de raha (2/3): https://twice-corners-damages-tin.trycloudflare.com
+2026-11-15T20:29:39Z ERR failed to serve incoming request error="Unauthorized: Tunnel not found"
+2026-11-15T20:29:39Z ERR Register tunnel error from server side error="Unauthorized: Tunnel not found" connIndex=0 event=0 ip=198.41.200.43
+2026-11-15T20:29:43Z ERR Connection terminated error="Unauthorized: Tunnel not found" connIndex=0
+[PROBE] public URL jawab nahi de raha (3/3): https://twice-corners-damages-tin.trycloudflare.com
+[TUNNEL] https://twice-corners-damages-tin.trycloudflare.com band ho gaya — public URL 3x unreachable (2243s chala).
+[RETRY] 6s baad naya tunnel banaya jayega (attempt 1).
+
+Backend preflight: http://127.0.0.1:8000/health ...
+Backend OK — tunnel start kar raha hoon.
+
+Cloudflare Tunnel start ho raha hai: tunnel --url http://127.0.0.1:8000 --no-autoupdate --protocol http2 --edge-ip-version 4
+
+
+================================================================
+  JARVIS PUBLIC URL  (phone / kisi bhi network se kholein)
+  https://beautiful-mistress-designing-richmond.trycloudflare.com
+================================================================
+
+[Sun 11/15/2026 12:32:01.61] run_hidden.bat starting tunnel 
+================================================================
+  JARVIS Remote Access — secure HTTPS tunnel (supervised)
+  Local server : http://127.0.0.1:8000
+================================================================
+Backend preflight: http://127.0.0.1:8000/health ...
+Backend OK — tunnel start kar raha hoon.
+
+Backend preflight: http://127.0.0.1:8000/health ...
+Backend OK — tunnel start kar raha hoon.
+
+Cloudflare Tunnel start ho raha hai: tunnel --url http://127.0.0.1:8000 --no-autoupdate --protocol http2 --edge-ip-version 4
+
+
+================================================================
+  JARVIS PUBLIC URL  (phone / kisi bhi network se kholein)
+  https://stuart-parties-introduced-mathematical.trycloudflare.com
+================================================================
+
+2026-11-15T20:48:09Z ERR  error="Incoming request ended abruptly: context canceled" connIndex=0 event=1 ingressRule=0 originService=http://127.0.0.1:8000
+2026-11-15T20:48:09Z ERR failed to serve incoming request error="failed to proxy HTTP: Incoming request ended abruptly: context canceled"
+[BACKEND] local /health jawab nahi de raha — backend restart kar raha hoon (tunnel aur URL wahi rahenge) ...
+Backend preflight: http://127.0.0.1:8000/health ...
+[WARN] Backend jawab nahi de raha — ise khud start kar raha hoon ...
+[ERROR] 90s me backend up nahi hua — tunnel phir bhi try kar raha hoon (agle retry par dobara check hoga).
+
+2026-11-15T20:48:21Z ERR  error="Incoming request ended abruptly: context canceled" connIndex=0 event=1 ingressRule=0 originService=http://127.0.0.1:8000
+[BACKEND] local /health jawab nahi de raha — backend restart kar raha hoon (tunnel aur URL wahi rahenge) ...
+Backend preflight: http://127.0.0.1:8000/health ...
+[WARN] Backend jawab nahi de raha — ise khud start kar raha hoon ...
+[ERROR] 90s me backend up nahi hua — tunnel phir bhi try kar raha hoon (agle retry par dobara check hoga).
+
+2026-11-15T20:48:21Z ERR failed to serve incoming request error="failed to proxy HTTP: Incoming request ended abruptly: context canceled"
+[BACKEND] local /health jawab nahi de raha — backend restart kar raha hoon (tunnel aur URL wahi rahenge) ...
+Backend preflight: http://127.0.0.1:8000/health ...
+[WARN] Backend jawab nahi de raha — ise khud start kar raha hoon ...
+[ERROR] 90s me backend up nahi hua — tunnel phir bhi try kar raha hoon (agle retry par dobara check hoga).
+
+2026-11-15T20:48:25Z ERR  error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: read tcp 127.0.0.1:57214->127.0.0.1:8000: wsarecv: An existing connection was forcibly closed by the remote host." connIndex=0 event=1 ingressRule=0 originService=http://127.0.0.1:8000
+[BACKEND] local /health jawab nahi de raha — backend restart kar raha hoon (tunnel aur URL wahi rahenge) ...
+Backend preflight: http://127.0.0.1:8000/health ...
+[WARN] Backend jawab nahi de raha — ise khud start kar raha hoon ...
+[ERROR] 90s me backend up nahi hua — tunnel phir bhi try kar raha hoon (agle retry par dobara check hoga).
+
+2026-11-15T20:48:25Z ERR failed to serve incoming request error="failed to proxy HTTP: Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: read tcp 127.0.0.1:57214->127.0.0.1:8000: wsarecv: An existing connection was forcibly closed by the remote host."
+[BACKEND] local /health jawab nahi de raha — backend restart kar raha hoon (tunnel aur URL wahi rahenge) ...
+Backend preflight: http://127.0.0.1:8000/health ...
+[WARN] Backend jawab nahi de raha — ise khud start kar raha hoon ...
+[Sun 11/15/2026 12:59:03.47] run_hidden.bat starting tunnel 
+================================================================
+  JARVIS Remote Access — secure HTTPS tunnel (supervised)
+  Local server : http://127.0.0.1:8000
+================================================================
+Backend preflight: http://127.0.0.1:8000/health ...
+Backend OK — tunnel start kar raha hoon.
+
+Backend preflight: http://127.0.0.1:8000/health ...
+Backend OK — tunnel start kar raha hoon.
+
+Cloudflare Tunnel start ho raha hai: tunnel --url http://127.0.0.1:8000 --no-autoupdate --protocol http2 --edge-ip-version 4
+
+
+================================================================
+  JARVIS PUBLIC URL  (phone / kisi bhi network se kholein)
+  https://compaq-stephanie-explosion-greensboro.trycloudflare.com
+================================================================
+

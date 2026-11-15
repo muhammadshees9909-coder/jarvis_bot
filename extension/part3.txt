@@ -1,0 +1,49 @@
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+function setLoading(loading) {
+  STATE.submitting = loading;
+  const list = STATE.messages;
+  const last = list.lastElementChild;
+  if (loading) {
+    const el = document.createElement('div');
+    el.className = "jarvis-message jarvis-loading";
+    el.textContent = "Thinking...";
+    list.appendChild(el);
+  } else if (last && last.classList.contains('jarvis-loading')) {
+    last.remove();
+  }
+  list.scrollTop = list.scrollHeight;
+}
+
+function renderResponse(text) {
+  const list = STATE.messages;
+  const el = document.createElement('div');
+  el.className = "jarvis-message jarvis-assistant";
+  el.innerHTML = escapeHtml(text) + '<span class="jarvis-meta">Just now</span>';
+  list.appendChild(el);
+  list.scrollTop = list.scrollHeight;
+}
+
+function renderQuickReplies(replies) {
+  const container = STATE.quickRepl;
+  if (!Array.isArray(replies) || replies.length === 0) {
+    container.innerHTML = '';
+    return;
+  }
+  container.innerHTML = '';
+  for (const r of replies) {
+    const btn = document.createElement('button');
+    btn.className = "jarvis-quick-btn";
+    btn.textContent = r.label || r.text || r;
+    btn.addEventListener('click', function() {
+      STATE.textarea.value = r.value || r;
+      STATE.textarea.dispatchEvent(new Event('input'));
+      sendMessage();
+    });
+    container.appendChild(btn);
+  }

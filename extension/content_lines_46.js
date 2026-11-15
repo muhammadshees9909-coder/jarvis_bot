@@ -1,0 +1,46 @@
+/**
+ * content.js — Floating glassmorphism JARVIS assistant (Manifest V3 content script)
+ *
+ * Responsibilities:
+ *   1. Inject the floating HTML widget (#jarvis-root > #jarvis-bubble + #jarvis-card)
+ *   2. Toggle between bubble, expanded card, and side-panel modes
+ *   3. POST chat messages to http://127.0.0.1:8000/chat
+ *   4. Render streaming/regular assistant responses
+ */
+
+"use strict";
+
+// ---------------------------------------------------------------------------
+// State
+// ---------------------------------------------------------------------------
+const STATE = {
+  open: false,            // card is currently visible
+  docked: false,          // side-panel mode active
+  submitting: false,      // request in flight
+  sessionId: null,        // server-side session id
+  messageId: 0,           // client-generated message counter
+};
+
+const API_BASE = "http://127.0.0.1:8000";
+const CHAT_URL = API_BASE + "/chat";
+
+// ---------------------------------------------------------------------------
+// Utility: inject a <style> tag with the provided CSS text
+// ---------------------------------------------------------------------------
+async function injectCss(cssText) {
+  const style = document.createElement("style");
+  style.id = "jarvis-style";
+  style.textContent = cssText;
+  document.head.appendChild(style);
+}
+
+// ---------------------------------------------------------------------------
+// Utility: fetch JSON and return parsed body on success
+// ---------------------------------------------------------------------------
+async function chatFetch(body) {
+  const opts = {
+
+// ---------------------------------------------------------------------------
+// HTML template for the widget
+// ---------------------------------------------------------------------------
+const WIDGET_HTML = `

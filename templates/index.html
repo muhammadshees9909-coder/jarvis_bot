@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>JARVIS · EUR/USD Intelligence</title>
+
+<!-- ---------------- PWA / mobile home-screen metadata ---------------- -->
+<meta name="description" content="JARVIS Forexcast Intelligence - live EUR/USD, DXY and US10Y context with an AI trading assistant.">
+<meta name="theme-color" content="#07070c">
+<meta name="color-scheme" content="dark">
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" type="image/svg+xml" href="/static/icon.svg">
+<link rel="apple-touch-icon" href="/static/icon-192.png">
+<link rel="apple-touch-icon" sizes="192x192" href="/static/icon-192.png">
+<link rel="apple-touch-icon" sizes="512x512" href="/static/icon-512.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="JARVIS">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="application-name" content="JARVIS">
+<meta name="format-detection" content="telephone=no">
+<style>
+  :root{
+    --bg:#07070c; --sidebar:rgba(15,16,25,.72); --panel:rgba(20,21,33,.62); --panel-2:rgba(32,33,50,.6);
+    --border:rgba(255,255,255,.09); --glass-hi:rgba(255,255,255,.07);
+    --text:#ececf5; --muted:#8f93a8;
+    --accent:#6c5ce7; --accent-2:#0ea5e9;
+    --user:linear-gradient(135deg,#6c5ce7,#0ea5e9); --bot:rgba(28,30,46,.72);
+    --danger:#e24f60; --up:#22c55e; --down:#e24f60;
+    --sidebar-w:272px;
+    --blur:blur(22px) saturate(165%);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg);color:var(--text);display:flex;overflow:hidden;position:relative;
+  }
+  /* ambient aurora glow baked into the page background */
+  body::before{
+    content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+    background:
+      radial-gradient(58% 52% at 10% 6%, rgba(108,92,231,.30), transparent 62%),
+      radial-gradient(52% 48% at 90% 94%, rgba(14,165,233,.24), transparent 60%),
+      radial-gradient(40% 42% at 82% 4%, rgba(168,85,247,.16), transparent 62%);
+  }
+  body>*{position:relative;z-index:1}
+  button{font-family:inherit}
+
+  /* ---------------- Sidebar ---------------- */
+  #sidebar{
+    width:var(--sidebar-w);flex:0 0 var(--sidebar-w);height:100%;background:var(--sidebar);
+    backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);
+    border-right:1px solid var(--border);display:flex;flex-direction:column;
+  }
+  .brand{display:flex;align-items:center;gap:10px;padding:16px;border-bottom:1px solid var(--border)}
+  .brand .mark{
+    width:34px;height:34px;border-radius:10px;flex:0 0 34px;
+    background:linear-gradient(135deg,var(--accent),var(--accent-2));
+    display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:17px;
+    box-shadow:0 0 18px rgba(108,92,231,.6),0 0 0 1px rgba(255,255,255,.14) inset;
+  }
+  .brand h1{font-size:15px;font-weight:700;letter-spacing:.4px}
+  .brand .sub{font-size:11px;color:var(--muted)}
+  #new-chat{
+    margin:12px;padding:11px 14px;border:1px solid var(--border);border-radius:10px;
+    background:linear-gradient(180deg,var(--glass-hi),rgba(255,255,255,.02));color:var(--text);
+    font-size:13px;font-weight:600;
+    cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;
+    transition:background .18s,border-color .18s,box-shadow .18s;
+  }
+  #new-chat:hover{
+    border-color:transparent;color:#fff;
+    background:linear-gradient(135deg,var(--accent),var(--accent-2));
+    box-shadow:0 8px 24px rgba(108,92,231,.45);
+  }
+  .side-label{padding:4px 16px 8px;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  #session-list{flex:1;overflow-y:auto;padding:0 8px 8px}
+  .session-item{
+    display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:9px;
+    cursor:pointer;margin-bottom:3px;border:1px solid transparent;transition:background .15s;
+  }
+  .session-item:hover{background:var(--panel-2);border-color:var(--border)}
+  .session-item.active{
+    background:linear-gradient(90deg,rgba(108,92,231,.24),rgba(14,165,233,.1));
+    border-color:rgba(108,92,231,.55);
+    box-shadow:0 0 18px rgba(108,92,231,.22);
+  }
+  .session-meta{flex:1;min-width:0}
+  .session-title{
+    font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  .session-time{font-size:10.5px;color:var(--muted);margin-top:2px}
+  .session-del{
+    flex:0 0 auto;background:transparent;border:none;color:var(--muted);cursor:pointer;
+    font-size:13px;padding:2px 5px;border-radius:6px;opacity:0;transition:opacity .15s,color .15s;
+  }
+  .session-item:hover .session-del{opacity:1}
+  .session-del:hover{color:var(--danger);background:rgba(226,79,96,.12)}
+  #session-list .empty{padding:14px 10px;font-size:12px;color:var(--muted);line-height:1.6}
+  .side-footer{
+    padding:10px 16px;border-top:1px solid var(--border);font-size:11px;color:var(--muted);
+    display:flex;align-items:center;gap:7px;
+  }
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--muted);flex:0 0 7px}
+  .dot.online{background:var(--up)}
+  .dot.offline{background:var(--down)}
+
+  /* ---------------- Main ---------------- */
+  #main{flex:1;display:flex;flex-direction:column;min-width:0;height:100%}
+  #topbar{
+    display:flex;align-items:center;gap:10px;padding:10px 16px;
+    border-bottom:1px solid var(--border);background:var(--sidebar);flex-wrap:wrap;
+    backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);
+  }
+  #menu-btn{display:none;background:transparent;border:1px solid var(--border);border-radius:8px;
+    color:var(--text);font-size:15px;padding:6px 10px;cursor:pointer}
+  #market-bar{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;flex:1;min-width:0}
+  .tick{display:flex;align-items:baseline;gap:5px;color:var(--muted);white-space:nowrap}
+  .tick b{color:var(--text);font-weight:700;font-size:12.5px}
+  .tick .chg{font-size:11px;font-weight:600}
+  .up{color:var(--up)} .down{color:var(--down)}
+  .top-btn{
+    background:var(--panel-2);border:1px solid var(--border);border-radius:8px;color:var(--text);
+    font-size:13px;padding:6px 10px;cursor:pointer;transition:border-color .15s,background .15s;
+  }
+  .top-btn:hover{border-color:var(--accent)}
+  .top-btn.active{border-color:var(--accent);background:rgba(108,92,231,.18)}
+  #news-strip{
+    padding:7px 16px;border-bottom:1px solid var(--border);background:var(--panel);
+    backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);
+    font-size:11.5px;color:var(--muted);display:flex;gap:18px;overflow-x:auto;white-space:nowrap;
+  }
+  #news-strip .ev{display:flex;gap:6px;align-items:baseline}
+  #news-strip .ev .t{color:var(--accent-2);font-weight:700}
+
+  #chat{flex:1;overflow-y:auto;padding:22px 18px;display:flex;flex-direction:column;gap:14px}
+  .row{display:flex;width:100%}
+  .row.user{justify-content:flex-end}
+  .msg{
+    max-width:min(760px,82%);padding:11px 15px;border-radius:14px;line-height:1.55;
+    font-size:14px;word-wrap:break-word;overflow-wrap:anywhere;animation:fadeIn .22s ease;
+  }
+  @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .row.user .msg{
+    background:var(--user);color:#fff;border-bottom-right-radius:4px;
+    box-shadow:0 8px 24px rgba(108,92,231,.35);
+  }
+  .row.bot .msg{
+    background:var(--bot);border:1px solid var(--border);border-bottom-left-radius:4px;
+    backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  }
+  .msg code{background:rgba(255,255,255,.09);padding:1px 5px;border-radius:5px;font-size:12.5px}
+  .msg pre{background:rgba(8,9,15,.72);border:1px solid var(--border);border-radius:9px;padding:10px 12px;
+    margin:8px 0;overflow-x:auto;font-size:12.5px}
+  .msg ul{margin:6px 0 6px 18px}
+  .msg li{margin:3px 0}
+  .msg .meta{font-size:10px;color:var(--muted);margin-top:7px}
+  .row.user .msg .meta{text-align:right}
+  .typing span{
+    display:inline-block;width:7px;height:7px;margin-right:4px;border-radius:50%;
+    background:var(--muted);animation:bounce 1.2s infinite;
+  }
+  .typing span:nth-child(2){animation-delay:.15s}
+  .typing span:nth-child(3){animation-delay:.3s}
+  @keyframes bounce{0%,60%,100%{transform:translateY(0);opacity:.45}30%{transform:translateY(-5px);opacity:1}}
+
+  /* ---------------- Composer ---------------- */
+  #composer{
+    padding:14px 18px 18px;border-top:1px solid var(--border);background:var(--sidebar);
+    backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);
+  }
+  #composer-inner{
+    display:flex;align-items:flex-end;gap:8px;max-width:900px;margin:0 auto;
+    background:var(--panel-2);border:1px solid var(--border);border-radius:14px;padding:8px;
+    backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+    transition:border-color .15s,box-shadow .15s;
+  }
+  #composer-inner:focus-within{
+    border-color:var(--accent);
+    box-shadow:0 0 0 3px rgba(108,92,231,.20),0 10px 30px rgba(0,0,0,.35);
+  }
+  #message-input{
+    flex:1;background:transparent;border:none;outline:none;color:var(--text);
+    font-size:14px;line-height:1.5;resize:none;max-height:150px;padding:8px 6px;
+  }
+  .circle-btn{
+    flex:0 0 auto;width:38px;height:38px;border-radius:10px;border:1px solid var(--border);
+    background:transparent;color:var(--text);font-size:15px;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;transition:all .15s;
+  }
+  .circle-btn:hover{border-color:var(--accent)}
+  #mic-btn.listening{
+    border-color:var(--danger);background:rgba(226,79,96,.2);animation:pulse 1.2s ease-in-out infinite;
+  }
+  @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(226,79,96,.45)}50%{box-shadow:0 0 0 7px rgba(226,79,96,0)}}
+  #send-btn{
+    flex:0 0 auto;width:38px;height:38px;border-radius:10px;border:none;
+    background:linear-gradient(135deg,var(--accent),var(--accent-2));
+    color:#fff;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;
+    transition:filter .15s,box-shadow .15s;
+  }
+  #send-btn:hover{filter:brightness(1.08);box-shadow:0 8px 22px rgba(108,92,231,.5)}
+  #send-btn:disabled{background:var(--border);box-shadow:none;cursor:not-allowed;filter:none}
+  #hint{max-width:900px;margin:8px auto 0;font-size:11px;color:var(--muted);text-align:center;min-height:14px}
+
+  /* ---------------- Scrollbars ---------------- */
+  #chat::-webkit-scrollbar,#session-list::-webkit-scrollbar,#news-strip::-webkit-scrollbar{
+    width:6px;height:6px;
+  }
+  #chat::-webkit-scrollbar-thumb,#session-list::-webkit-scrollbar-thumb,#news-strip::-webkit-scrollbar-thumb{
+    background:rgba(255,255,255,.16);border-radius:3px;
+  }
+  #chat::-webkit-scrollbar-track,#session-list::-webkit-scrollbar-track,#news-strip::-webkit-scrollbar-track{
+    background:transparent;
+  }
+
+  @media (max-width:820px){
+    #sidebar{position:fixed;left:0;top:0;z-index:20;transform:translateX(-100%);transition:transform .22s ease}
+    #sidebar.open{transform:none;box-shadow:0 0 40px rgba(0,0,0,.6)}
+    #menu-btn{display:block}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============================ SIDEBAR ============================ -->
+<aside id="sidebar">
+  <div class="brand">
+    <div class="mark">J</div>
+    <div>
+      <h1>JARVIS</h1>
+      <div class="sub">EUR/USD Intelligence</div>
+    </div>
+  </div>
+
+  <button id="new-chat" type="button">＋ &nbsp;New Chat</button>
+
+  <div class="side-label">Recent chats</div>
+  <div id="session-list"></div>
+
+  <div class="side-footer">
+    <span class="dot" id="status-dot"></span>
+    <span id="status-text">Connecting…</span>
+  </div>
+</aside>
+
+<!-- ============================= MAIN ============================== -->
+<main id="main">
+  <div id="topbar">
+    <button id="menu-btn" type="button" title="Toggle sidebar">☰</button>
+    <div id="market-bar"></div>
+    <button id="install-btn" class="top-btn" type="button" title="Install JARVIS app" hidden>⤓</button>
+    <button id="speak-btn" class="top-btn" type="button" title="Toggle voice replies">🔇</button>
+  </div>
+
+  <div id="news-strip"><span>Loading economic calendar…</span></div>
+
+  <div id="chat"></div>
+
+  <div id="composer">
+    <div id="composer-inner">
+      <button id="mic-btn" class="circle-btn" type="button" title="Continuous voice input">🎙️</button>
+      <textarea id="message-input" rows="1" placeholder="Ask about EUR/USD, DXY, US10Y, or economic events…"></textarea>
+      <button id="send-btn" type="button" title="Send">➤</button>
+    </div>
+    <div id="hint"></div>
+  </div>
+</main>
+
+<script>
+(function () {
+  "use strict";
+
+  var API = "";
+  var LS_SESSION = "jarvis_dashboard_session";
+  var LS_SPEAK = "jarvis_dashboard_speak";
+
+  var chatEl = document.getElementById("chat");
+  var inputEl = document.getElementById("message-input");
+  var sendBtn = document.getElementById("send-btn");
+  var micBtn = document.getElementById("mic-btn");
+  var speakBtn = document.getElementById("speak-btn");
+  var marketBar = document.getElementById("market-bar");
+  var newsStrip = document.getElementById("news-strip");
+  var sessionListEl = document.getElementById("session-list");
+  var hintEl = document.getElementById("hint");
+  var statusDot = document.getElementById("status-dot");
+  var statusText = document.getElementById("status-text");
+  var sidebar = document.getElementById("sidebar");
+
+  var currentSessionId = localStorage.getItem(LS_SESSION) || null;
+  // Auto-speak is ON by default (like a real voice assistant); only an explicit
+  // mute is remembered.
+  var speakEnabled = localStorage.getItem(LS_SPEAK) !== "0";
+  var busy = false;
+  var typingRow = null;
+
+  /* ------------------------- helpers ------------------------- */
+  function escapeHtml(text) {
+    var d = document.createElement("div");
+    d.textContent = text == null ? "" : String(text);
+    return d.innerHTML;
+  }
+
+  function renderMarkdown(text) {
+    var lines = escapeHtml(text).split("\n");
+    var html = "";
+    var inCode = false;
+    var inList = false;
+
+    function inline(s) {
+      return s
+        .replace(/`([^`]+)`/g, "<code>$1</code>")
+        .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
+        .replace(/(^|[^*])\*([^*\n]+)\*/g, "$1<em>$2</em>");
+    }
+    function closeList() {
+      if (inList) { html += "</ul>"; inList = false; }
+    }
+
+    lines.forEach(function (line) {
+      if (/^\s*```/.test(line)) {
+        if (!inCode) { closeList(); html += "<pre>"; inCode = true; }
+        else { html += "</pre>"; inCode = false; }
+        return;
+      }
+      if (inCode) { html += line + "\n"; return; }
+
+      var bullet = line.match(/^\s*[-*+]\s+(.*)$/);
+      if (bullet) {
+        if (!inList) { html += "<ul>"; inList = true; }
+        html += "<li>" + inline(bullet[1]) + "</li>";
+        return;
+      }
+      closeList();
+
+      var heading = line.match(/^\s*#{1,6}\s*(.+)$/);
+      if (heading) { html += "<strong>" + inline(heading[1]) + "</strong><br>"; return; }
+
+      html += inline(line) + "<br>";
+    });
+
+    closeList();
+    if (inCode) html += "</pre>";
+    return html;
+  }
+
+  function plainText(text) {
+    // Turns a reply into something a voice can read without stumbling:
+    // markdown, links, URLs and emojis are stripped so the TTS never spells
+    // symbols (or emoji names) out loud.
+    return String(text)
+      .replace(/```[\s\S]*?```/g, " ")
+      .replace(/`([^`]*)`/g, "$1")
+      .replace(/!\[[^\]]*\]\([^)]*\)/g, " ")      // markdown images
+      .replace(/\[([^\]]*)\]\([^)]*\)/g, "$1")    // markdown links -> label
+      .replace(/(https?:\/\/|www\.)\S+/gi, " ")   // bare URLs
+      .replace(/\*\*?([^*]+)\*\*?/g, "$1")        // bold / italic
+      .replace(/^\s*[-*+]\s+/gm, "")              // bullet markers
+      .replace(/^\s*#{1,6}\s*/gm, "")             // heading markers
+      .replace(/[*_~`#>|]+/g, " ")                // leftover markup symbols
+      .replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, " ")               // emoji (surrogate pairs)
+      .replace(/[\u2190-\u21FF\u2300-\u27BF\u2B00-\u2BFF]/g, " ")    // arrows + symbols
+      .replace(/[\uFE0F\u200D\u20E3]/g, "")       // emoji modifiers / joiners
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
+  function formatTime(value) {
+    var d = value ? new Date(/[Zz]|[+-]\d\d:?\d\d$/.test(value) ? value : value + "Z") : new Date();
+    if (isNaN(d.getTime())) d = new Date();
+    return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  }
+
+  function scrollToBottom() {
+    chatEl.scrollTop = chatEl.scrollHeight;
+  }
+
+  function setStatus(text, state) {
+    statusText.textContent = text;
+    statusDot.className = "dot" + (state ? " " + state : "");
+  }
+
+  function setHint(text) {
+    hintEl.textContent = text || "";
+  }
+
+  function newId() {
+    if (window.crypto && window.crypto.randomUUID) return window.crypto.randomUUID().replace(/-/g, "");
+    return "s" + Date.now().toString(36) + Math.random().toString(36).slice(2, 10);
+  }
+
+  /* ------------------------- messages ------------------------- */
+  function appendMessage(text, role, time) {
+    var row = document.createElement("div");
+    row.className = "row " + (role === "user" ? "user" : "bot");
+    var msg = document.createElement("div");
+    msg.className = "msg";
+    msg.innerHTML = role === "user" ? escapeHtml(text) : renderMarkdown(text);
+    var meta = document.createElement("div");
+    meta.className = "meta";
+    meta.textContent = time ? formatTime(time) : new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    msg.appendChild(meta);
+    row.appendChild(msg);
+    chatEl.appendChild(row);
+    scrollToBottom();
+    return msg;
+  }
+
+  function showTyping() {
+    if (typingRow) return;
+    typingRow = document.createElement("div");
+    typingRow.className = "row bot";
+    typingRow.innerHTML = '<div class="msg typing"><span></span><span></span><span></span></div>';
+    chatEl.appendChild(typingRow);
+    scrollToBottom();
+  }
+
+  function hideTyping() {
+    if (typingRow && typingRow.parentNode) typingRow.parentNode.removeChild(typingRow);
+    typingRow = null;
+  }
+
+  /* ------------------------- TTS ------------------------- */
+  var activeUtterance = null;
+
+  function stopSpeaking() {
+    // Dropping the reference first means the cancelled utterance's onend is
+    // ignored, so a cancel never re-arms the microphone by accident.
+    activeUtterance = null;
+    if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+  }
+
+  // A plain en-US voice spells Roman Urdu written in Latin letters ("theek hai
+  // yaar") out one letter at a time. South-Asian phonetic voices read it the
+  // way it actually sounds, so they are tried in this order:
+  //   ur-PK  ->  hi-IN  ->  en-IN / en-PK  ->  Google voices  ->  any English.
+  var VOICE_PREFERENCE = [/^ur[-_]/i, /^hi[-_]/i, /^en[-_](IN|PK)/i, /google/i, /^en[-_]/i];
+  var cachedVoice = null;
+
+  function pickVoice() {
+    if (cachedVoice || !("speechSynthesis" in window)) return cachedVoice;
+    var voices = window.speechSynthesis.getVoices() || [];
+    for (var p = 0; p < VOICE_PREFERENCE.length && !cachedVoice; p++) {
+      for (var i = 0; i < voices.length; i++) {
+        if (VOICE_PREFERENCE[p].test(voices[i].lang) || VOICE_PREFERENCE[p].test(voices[i].name)) {
+          cachedVoice = voices[i];
+          break;
+        }
+      }
+    }
+    if (!cachedVoice) cachedVoice = voices[0] || null;
+    return cachedVoice;
+  }
+
+  // Speaks a reply and calls onDone() once the voice has finished, which is
+  // what lets the hands-free loop start listening again. If speech is muted or
+  // unavailable, onDone still runs so the loop never stalls.
+  function speak(text, onDone) {
+    if (!("speechSynthesis" in window)) {
+      if (onDone) onDone();
+      return;
+    }
+    var clean = plainText(text);
+    if (!speakEnabled || !clean) {
+      if (onDone) onDone();
+      return;
+    }
+    stopSpeaking();
+    var u = new SpeechSynthesisUtterance(clean);
+    var voice = pickVoice();
+    u.lang = voice ? voice.lang : "en-IN";
+    u.rate = 1.02;
+    u.pitch = 1.0;
+    if (voice) u.voice = voice;
+    activeUtterance = u;
+    u.onend = function () {
+      if (activeUtterance === u) { activeUtterance = null; if (onDone) onDone(); }
+    };
+    u.onerror = function () {
+      if (activeUtterance === u) { activeUtterance = null; if (onDone) onDone(); }
+    };
+    window.speechSynthesis.speak(u);
+  }
+
+  /* ------------------- Mobile notifications -------------------
+     Best-effort: only ping the phone when the tab is in the background, so
+     the user still learns that JARVIS replied while they were elsewhere. */
+  function askNotificationPermission() {
+    try {
+      if (!("Notification" in window)) return;
+      if (Notification.permission === "default") {
+        Notification.requestPermission().catch(function () {});
+      }
+    } catch (e) { /* ignore */ }
+  }
+
+  function notifyReply(text) {
+    try {
+      if (!("Notification" in window)) return;
+      if (Notification.permission !== "granted") return;
+      if (!document.hidden) return;
+      var body = plainText(text).slice(0, 180);
+      if (!body) return;
+      var note = new Notification("JARVIS", {
+        body: body,
+        icon: "/static/icon-192.png",
+        badge: "/static/icon-192.png",
+        tag: "jarvis-reply"
+      });
+      note.onclick = function () { window.focus(); note.close(); };
+    } catch (e) { /* notifications are best-effort */ }
+  }
+
+  speakBtn.textContent = speakEnabled ? "🔊" : "🔇";
+  speakBtn.title = speakEnabled ? "Auto-speak ON — click to mute" : "Auto-speak OFF — click to unmute";
+  speakBtn.addEventListener("click", function () {
+    speakEnabled = !speakEnabled;
+    localStorage.setItem(LS_SPEAK, speakEnabled ? "1" : "0");
+    speakBtn.textContent = speakEnabled ? "🔊" : "🔇";
+    speakBtn.title = speakEnabled ? "Auto-speak ON — click to mute" : "Auto-speak OFF — click to unmute";
+    speakBtn.classList.toggle("active", speakEnabled);
+    setHint(speakEnabled ? "Auto-speak ON — JARVIS bol kar jawab dega" : "Auto-speak OFF — sirf text");
+    if (!speakEnabled) stopSpeaking();
+    setTimeout(function () { setHint(""); }, 1800);
+  });
+  speakBtn.classList.toggle("active", speakEnabled);
+  if ("speechSynthesis" in window) {
+    // Voice list loads asynchronously on Chrome; drop the cached pick so the
+    // best Urdu / Hindi / Indian English voice is chosen once it is known.
+    window.speechSynthesis.onvoiceschanged = function () { cachedVoice = null; pickVoice(); };
+  }
+
+  /* ------------------------- STT (continuous) ------------------------- */
+  var Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  var recognizer = null;
+  var micActive = false;
+
+  // Transcript model (Android-Chrome safe). Interim text is *rendered only* and
+  // never committed, so a phrase can never be appended twice:
+  //   baseText    -> whatever was already typed before the mic started
+  //   committed   -> final words of recognition sessions that already ended
+  //   finalText   -> final words of the *current* session (rebuilt every event)
+  //   interim     -> not-yet-final words of the current session
+  // Android Chrome keeps re-emitting the whole `event.results` list, so we always
+  // rebuild from index 0 instead of trusting `event.resultIndex`; that alone stops
+  // already-finalised words from being appended again ("hey hey Jarvis ...").
+  var baseText = "";
+  var committedTranscript = "";
+  var sessionFinalTranscript = "";
+  var interimTranscript = "";
+
+  function currentTranscript() {
+    return (baseText + " " + committedTranscript + " " + sessionFinalTranscript + " " + interimTranscript)
+      .replace(/\s+/g, " ")
+      .replace(/^\s+/, "");
+  }
+
+  function resetTranscript() {
+    committedTranscript = "";
+    sessionFinalTranscript = "";
+    interimTranscript = "";
+  }
+
+  if (Recognition) {
+    recognizer = new Recognition();
+    recognizer.lang = navigator.language || "en-US";
+    recognizer.continuous = true;
+    recognizer.interimResults = true;
+
+    recognizer.onstart = function () {
+      micBtn.classList.add("listening");
+      micBtn.textContent = "⏹";
+      setHint("Listening… speak now");
+    };
+
+    recognizer.onresult = function (event) {
+      // Rebuild the whole session transcript from the start: each final result
+      // belongs in finalText exactly once, whatever `event.resultIndex` reports.
+      var finals = "";
+      var interim = "";
+      for (var i = 0; i < event.results.length; i++) {
+        var result = event.results[i];
+        var chunk = result[0] ? result[0].transcript : "";
+        if (result.isFinal) finals += chunk;
+        else interim += chunk;
+      }
+      sessionFinalTranscript = finals;
+      interimTranscript = interim;
+      inputEl.value = currentTranscript();
+      autoGrow();
+    };
+
+    recognizer.onerror = function (event) {
+      if (event.error === "no-speech" || event.error === "aborted") return;
+      if (event.error === "not-allowed" || event.error === "service-not-allowed") {
+        setHint("Microphone permission blocked for this site");
+        stopMic();
+        return;
+      }
+      setHint("Voice error: " + event.error);
+    };
+
+    recognizer.onend = function () {
+      // Fold this session's final words into the committed transcript so the
+      // auto-restart below neither loses them nor repeats them.
+      committedTranscript = (committedTranscript + " " + sessionFinalTranscript).replace(/\s+/g, " ").trim();
+      sessionFinalTranscript = "";
+      interimTranscript = "";
+
+      // Continuous mode: Chrome stops after a pause — restart until the user stops it.
+      if (micActive) {
+        try { recognizer.start(); return; } catch (e) { /* fall through */ }
+      }
+      micBtn.classList.remove("listening");
+      micBtn.textContent = "🎙️";
+      setHint("");
+      var finalText = (baseText + " " + committedTranscript).replace(/\s+/g, " ").trim();
+      if (finalText) sendMessage(finalText, true);
+    };
+  } else {
+    micBtn.title = "Voice input not supported in this browser";
+    micBtn.style.opacity = ".45";
+  }
+
+  function startMic() {
+    if (!recognizer) return;
+    stopSpeaking();
+    micActive = true;
+    baseText = (inputEl.value || "").trim();
+    resetTranscript();
+    autoGrow();
+    try { recognizer.start(); } catch (e) { /* already started */ }
+  }
+
+  function stopMic() {
+    micActive = false;
+    if (recognizer) {
+      try { recognizer.stop(); } catch (e) { /* not running */ }
+    }
+    micBtn.classList.remove("listening");
+    micBtn.textContent = "🎙️";
+    setHint("");
+  }
+
+  micBtn.addEventListener("click", function () {
+    // A manual tap always cancels any pending hands-free re-arm.
+    pendingVoiceResume = false;
+    if (micActive) stopMic();
+    else startMic();
+  });
+
+  /* ------------------- Hands-free conversation loop -------------------
+     Flow: user speaks -> taps ⏹ -> reply is shown and spoken -> as soon as the
+     voice finishes (utterance.onend) the mic is re-armed, so the conversation
+     keeps going without pressing anything again.
+     The mic stays off while JARVIS talks, so it can never transcribe its own
+     voice, and the short delay avoids clipping the last word of the reply. */
+  var pendingVoiceResume = false;
+
+  function resumeVoiceLoop() {
+    if (!pendingVoiceResume) return;
+    pendingVoiceResume = false;
+    setTimeout(function () {
+      if (!busy && !micActive) startMic();
+    }, 350);
+  }
+
+  /* ------------------------- Composer ------------------------- */
+  function autoGrow() {
+    inputEl.style.height = "auto";
+    inputEl.style.height = Math.min(inputEl.scrollHeight, 150) + "px";
+  }
+
+  inputEl.addEventListener("input", autoGrow);
+  inputEl.addEventListener("keydown", function (e) {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage(inputEl.value);
+    }
+  });
+  sendBtn.addEventListener("click", function () {
+    askNotificationPermission();  // user gesture: the right moment to ask
+    sendMessage(inputEl.value);
+  });
+
+  /* ------------------------- Send ------------------------- */
+  async function sendMessage(rawText, fromVoice) {
+    var text = (rawText || "").trim();
+    if (!text || busy) return;
+
+    // Remember that this turn came from the microphone (either the mic was
+    // still open, or the user tapped ⏹ to send) so the hands-free loop can
+    // start listening again once JARVIS has finished speaking.
+    pendingVoiceResume = !!(fromVoice || micActive);
+
+    if (micActive) {
+      micActive = false;
+      try { recognizer.stop(); } catch (e) { /* ignore */ }
+      micBtn.classList.remove("listening");
+      micBtn.textContent = "🎙️";
+      setHint("");
+    }
+
+    stopSpeaking();
+    appendMessage(text, "user");
+    inputEl.value = "";
+    baseText = "";
+    resetTranscript();
+    autoGrow();
+
+    busy = true;
+    sendBtn.disabled = true;
+    showTyping();
+
+    try {
+      var res = await fetch(API + "/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: text, session_id: currentSessionId })
+      });
+
+      if (!res.ok) {
+        // The server answered, so it is NOT offline — show the real reason
+        // (e.g. the AI model is overloaded) instead of blaming the connection.
+        var detail = "";
+        try {
+          var errBody = await res.json();
+          detail = errBody.detail || errBody.error || "";
+          // FastAPI validation errors send an array here; only show plain text.
+          if (typeof detail !== "string") detail = "";
+        } catch (parseErr) { /* non-JSON error body */ }
+        if (!detail) detail = "Server error (HTTP " + res.status + ")";
+        hideTyping();
+        appendMessage("⚠️ " + detail, "bot");
+        setStatus("AI busy — try again", "offline");
+        return;
+      }
+
+      var data = await res.json();
+      hideTyping();
+
+      if (data.session_id) {
+        currentSessionId = data.session_id;
+        localStorage.setItem(LS_SESSION, currentSessionId);
+      }
+
+      var reply = data.response || data.error || "";
+      appendMessage(reply, "bot", data.timestamp);
+      speak(reply, resumeVoiceLoop);
+      notifyReply(reply);
+      if (data.market_context) setMarket(data.market_context);
+      setStatus("Connected", "online");
+      loadSessions();
+    } catch (err) {
+      // fetch() rejects only when the backend cannot be reached at all.
+      hideTyping();
+      appendMessage("⚠️ Connection error — FastAPI server (127.0.0.1:8000) check karein.", "bot");
+      setStatus("Server offline", "offline");
+    } finally {
+      busy = false;
+      sendBtn.disabled = false;
+      inputEl.focus();
+      scrollToBottom();
+    }
+  }
+
+  /* ------------------------- Market / News ------------------------- */
+  function setMarket(mc) {
+    if (!mc) return;
+    function num(v, digits) { return Number(v).toFixed(digits); }
+    var dxyChange = Number(mc.dxy_change_percent) || 0;
+    var dxyClass = dxyChange >= 0 ? "up" : "down";
+    var sign = dxyChange >= 0 ? "+" : "";
+    marketBar.innerHTML =
+      '<span class="tick">EUR/USD <b>' + num(mc.eurusd, 4) + "</b></span>" +
+      '<span class="tick">DXY <b>' + num(mc.dxy, 2) + '</b><span class="chg ' + dxyClass + '">' +
+        sign + num(dxyChange, 2) + "%</span></span>" +
+      '<span class="tick">US10Y <b>' + num(mc.us10y, 2) + "%</b></span>";
+  }
+
+  async function loadMarket() {
+    try {
+      var res = await fetch(API + "/api/market");
+      if (!res.ok) return;
+      var data = await res.json();
+      setMarket(data.market_context);
+    } catch (e) { /* keep last value */ }
+  }
+
+  async function loadNews() {
+    try {
+      var res = await fetch(API + "/api/news");
+      var data = await res.json();
+      var events = data.events || [];
+      if (!events.length) {
+        newsStrip.innerHTML = "<span>No high-impact events today</span>";
+        return;
+      }
+      newsStrip.innerHTML = events.map(function (e) {
+        var color = e.impact === "High" ? "var(--danger)" : "#f6c445";
+        return '<span class="ev"><span class="t">' + escapeHtml(e.time_pkt) + "</span>" +
+          "<span>" + escapeHtml(e.currency) + " · " + escapeHtml(e.event) + "</span>" +
+          '<span style="color:' + color + '">' + escapeHtml(e.impact) + "</span>" +
+          "<span>F: " + escapeHtml(e.forecast) + "</span></span>";
+      }).join("");
+    } catch (e) {
+      newsStrip.innerHTML = "<span>Economic calendar unavailable</span>";
+    }
+  }
+
+  /* ------------------------- Sessions ------------------------- */
+  function relativeTime(value) {
+    var d = new Date(/[Zz]|[+-]\d\d:?\d\d$/.test(value) ? value : value + "Z");
+    if (isNaN(d.getTime())) return "";
+    var mins = Math.round((Date.now() - d.getTime()) / 60000);
+    if (mins < 1) return "just now";
+    if (mins < 60) return mins + "m ago";
+    if (mins < 1440) return Math.round(mins / 60) + "h ago";
+    return d.toLocaleDateString();
+  }
+
+  function renderSessions(list) {
+    sessionListEl.innerHTML = "";
+    if (!list.length) {
+      sessionListEl.innerHTML = '<div class="empty">Koi saved chat nahi hai.<br>“New Chat” se shuru karein.</div>';
+      return;
+    }
+    list.forEach(function (s) {
+      var item = document.createElement("div");
+      item.className = "session-item" + (s.session_id === currentSessionId ? " active" : "");
+      item.title = s.title || "Untitled chat";
+
+      var meta = document.createElement("div");
+      meta.className = "session-meta";
+      var title = document.createElement("div");
+      title.className = "session-title";
+      title.textContent = s.title || "Untitled chat";
+      var time = document.createElement("div");
+      time.className = "session-time";
+      time.textContent = relativeTime(s.updated_at) + " · " + s.message_count + " msgs";
+      meta.appendChild(title);
+      meta.appendChild(time);
+
+      var del = document.createElement("button");
+      del.className = "session-del";
+      del.type = "button";
+      del.textContent = "🗑";
+      del.title = "Delete chat";
+      del.addEventListener("click", function (e) {
+        e.stopPropagation();
+        removeSession(s.session_id);
+      });
+
+      item.appendChild(meta);
+      item.appendChild(del);
+      item.addEventListener("click", function () { openSession(s.session_id); });
+      sessionListEl.appendChild(item);
+    });
+  }
+
+  async function fetchSessions() {
+    try {
+      var res = await fetch(API + "/api/sessions");
+      if (!res.ok) throw new Error("bad status");
+      var data = await res.json();
+      return data.sessions || [];
+    } catch (e) {
+      return null; // null = server unreachable
+    }
+  }
+
+  function renderWithDraft(list) {
+    var view = list.slice();
+    // Keep a brand-new (not yet saved) chat highlighted at the top.
+    if (currentSessionId && !view.some(function (s) { return s.session_id === currentSessionId; })) {
+      view.unshift({
+        session_id: currentSessionId, title: "New chat",
+        updated_at: new Date().toISOString(), message_count: 0
+      });
+    }
+    renderSessions(view);
+  }
+
+  async function loadSessions() {
+    var list = await fetchSessions();
+    if (list === null) {
+      setStatus("Server offline", "offline");
+      return null;
+    }
+    renderWithDraft(list);
+    setStatus("Connected", "online");
+    return list;
+  }
+
+  function newChat() {
+    currentSessionId = newId();
+    localStorage.setItem(LS_SESSION, currentSessionId);
+    chatEl.innerHTML = "";
+    appendMessage("Hi Shees! 👋 I'm JARVIS — your EUR/USD assistant. Ask me about market sentiment, DXY, US10Y, or today's economic events.", "bot");
+    loadSessions();
+    inputEl.focus();
+    sidebar.classList.remove("open");
+  }
+
+  async function openSession(sessionId) {
+    if (sessionId === currentSessionId && chatEl.children.length) {
+      sidebar.classList.remove("open");
+      return;
+    }
+    currentSessionId = sessionId;
+    localStorage.setItem(LS_SESSION, sessionId);
+    sidebar.classList.remove("open");
+
+    chatEl.innerHTML = "";
+    showTyping();
+    try {
+      var res = await fetch(API + "/api/sessions/" + encodeURIComponent(sessionId) + "/messages");
+      hideTyping();
+      if (!res.ok) {
+        appendMessage("Ye chat load nahi ho saki (empty ya delete ho chuki hai).", "bot");
+        loadSessions();
+        return;
+      }
+      var data = await res.json();
+      (data.messages || []).forEach(function (m) {
+        appendMessage(m.content, m.role === "user" ? "user" : "bot", m.created_at);
+      });
+    } catch (e) {
+      hideTyping();
+      appendMessage("⚠️ Transcript load karne me error aaya.", "bot");
+    }
+    loadSessions();
+  }
+
+  async function removeSession(sessionId) {
+    if (!window.confirm("Ye chat permanently delete karni hai?")) return;
+    try {
+      var res = await fetch(API + "/api/sessions/" + encodeURIComponent(sessionId), { method: "DELETE" });
+      if (!res.ok && res.status !== 404) throw new Error("delete failed");
+      if (sessionId === currentSessionId) newChat();
+      else loadSessions();
+    } catch (e) {
+      setHint("Delete nahi ho saka — server check karein");
+      setTimeout(function () { setHint(""); }, 2500);
+    }
+  }
+
+  document.getElementById("new-chat").addEventListener("click", newChat);
+  document.getElementById("menu-btn").addEventListener("click", function () {
+    sidebar.classList.toggle("open");
+  });
+
+  /* ------------------------- Boot ------------------------- */
+  (async function init() {
+    autoGrow();
+    var list = await loadSessions();
+    var storedExists = !!list && !!currentSessionId &&
+      list.some(function (s) { return s.session_id === currentSessionId; });
+
+    if (storedExists) await openSession(currentSessionId);
+    else newChat();
+
+    loadMarket();
+    loadNews();
+    setInterval(loadMarket, 20000);
+    setInterval(loadNews, 300000);
+  })();
+})();
+</script>
+<script>
+/* ------------------- PWA: register the service worker -------------------
+   Makes "Add to Home Screen" work on Android Chrome / iOS Safari. Only runs
+   on a secure origin (https), which is exactly the tunnel URL. */
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function () {
+    navigator.serviceWorker.register("/sw.js").catch(function () {});
+  });
+}
+
+/* ------------------- PWA: one-tap install -------------------
+   Chrome only shows the install prompt once the manifest + service worker make
+   the app installable; Android also requires the app to have been launched at
+   least twice before the automatic banner appears. Wiring beforeinstallprompt
+   to the ⤓ button means "Add to Home Screen" is one tap away from the start. */
+(function () {
+  var installBtn = document.getElementById("install-btn");
+  var deferredPrompt = null;
+
+  window.addEventListener("beforeinstallprompt", function (event) {
+    event.preventDefault();
+    deferredPrompt = event;
+    if (installBtn) installBtn.hidden = false;
+  });
+
+  if (installBtn) {
+    installBtn.addEventListener("click", function () {
+      if (!deferredPrompt) return;
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then(function () {
+        deferredPrompt = null;
+        installBtn.hidden = true;
+      });
+    });
+  }
+
+  window.addEventListener("appinstalled", function () {
+    deferredPrompt = null;
+    if (installBtn) installBtn.hidden = true;
+  });
+})();
+</script>
+</body>
+</html>

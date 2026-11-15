@@ -1,0 +1,404 @@
+/* ===========================================================================
+   JARVIS floating widget — premium glassmorphism theme
+   All rules are scoped under #jarvis-root so they never leak into the host page.
+   =========================================================================== */
+
+#jarvis-root {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 2147483646;
+  font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+  --j-accent: #6c5ce7;
+  --j-accent-2: #0ea5e9;
+  --j-glass: rgba(13, 14, 22, 0.72);
+  --j-glass-2: rgba(24, 25, 38, 0.66);
+  --j-border: rgba(255, 255, 255, 0.14);
+  --j-text: #eef0f7;
+  --j-muted: #9aa0b5;
+  --j-up: #22c55e;
+  --j-danger: #ef4444;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ===========================================================================
+   1. THE FLOATING BUBBLE  —  draggable, glassmorphic, glowing "J"
+   =========================================================================== */
+#jarvis-bubble {
+  position: relative;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+  background:
+    radial-gradient(circle at 30% 25%, rgba(255, 255, 255, 0.22), transparent 55%),
+    linear-gradient(145deg, rgba(108, 92, 231, 0.92), rgba(14, 165, 233, 0.82));
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  backdrop-filter: blur(14px) saturate(180%);
+  -webkit-backdrop-filter: blur(14px) saturate(180%);
+  box-shadow:
+    0 8px 30px rgba(108, 92, 231, 0.45),
+    0 0 0 1px rgba(255, 255, 255, 0.06) inset,
+    0 0 26px rgba(14, 165, 233, 0.35);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
+}
+
+#jarvis-bubble:hover {
+  transform: scale(1.07);
+  box-shadow:
+    0 12px 40px rgba(108, 92, 231, 0.6),
+    0 0 0 1px rgba(255, 255, 255, 0.1) inset,
+    0 0 34px rgba(14, 165, 233, 0.5);
+}
+
+#jarvis-bubble:active,
+#jarvis-bubble.jarvis-dragging {
+  cursor: grabbing;
+  transform: scale(1.03);
+}
+
+/* Glowing typographic "J" */
+.jarvis-logo {
+  font-size: 28px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.5px;
+  color: #ffffff;
+  background: linear-gradient(180deg, #ffffff, #cfe0ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 14px rgba(255, 255, 255, 0.65);
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.35));
+}
+
+/* Wake-word indicator dot on the bubble */
+.jarvis-wake-dot {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #6b7280;
+  border: 2px solid rgba(13, 14, 22, 0.9);
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.jarvis-wake-dot.jarvis-on {
+  background: var(--j-up);
+  box-shadow: 0 0 10px rgba(34, 197, 94, 0.9);
+  animation: jarvis-wake 1.6s ease-in-out infinite;
+}
+
+@keyframes jarvis-wake {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
+  50% { box-shadow: 0 0 0 7px rgba(34, 197, 94, 0); }
+}
+
+/* ===========================================================================
+   2. THE CARD  —  glass panel anchored to the bubble, flips near edges
+   =========================================================================== */
+#jarvis-card {
+  position: absolute;
+  right: 0;
+  bottom: 100%;
+  margin-bottom: 14px;
+  width: 384px;
+  height: 540px;
+  max-height: calc(100vh - 40px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 18px;
+  color: var(--j-text);
+  background:
+    radial-gradient(120% 90% at 100% 0%, rgba(108, 92, 231, 0.18), transparent 60%),
+    var(--j-glass);
+  border: 1px solid var(--j-border);
+  backdrop-filter: blur(22px) saturate(170%);
+  -webkit-backdrop-filter: blur(22px) saturate(170%);
+  box-shadow:
+    0 24px 60px rgba(0, 0, 0, 0.55),
+    0 0 0 1px rgba(255, 255, 255, 0.05) inset,
+    0 0 40px rgba(108, 92, 231, 0.18);
+  animation: jarvis-pop 0.2s ease;
+}
+
+@keyframes jarvis-pop {
+  from { opacity: 0; transform: translateY(8px) scale(0.98); }
+  to { opacity: 1; transform: none; }
+}
+
+#jarvis-card.jarvis-hidden {
+  display: none !important;
+}
+
+/* Bubble near the top of the viewport -> drop the card underneath it */
+#jarvis-card.jarvis-card-below {
+  top: 100%;
+  bottom: auto;
+  margin-top: 14px;
+  margin-bottom: 0;
+}
+
+/* Bubble near the left edge -> grow the card towards the right */
+#jarvis-card.jarvis-card-left {
+  right: auto;
+  left: 0;
+}
+
+/* Docked mode: full-height side panel */
+#jarvis-card.jarvis-docked {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: auto;
+  margin: 0;
+  width: 420px;
+  height: 100vh;
+  max-height: 100vh;
+  border-radius: 0;
+  border-right: none;
+}
+
+/* ---------------- Header ---------------- */
+.jarvis-header {
+  flex: 0 0 auto;
+  padding: 13px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.02));
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.jarvis-brand {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: #f8fafc;
+}
+
+.jarvis-brand-mark {
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0;
+  color: #fff;
+  background: linear-gradient(145deg, var(--j-accent), var(--j-accent-2));
+  box-shadow: 0 0 14px rgba(108, 92, 231, 0.6);
+}
+
+.jarvis-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.jarvis-btn-icon {
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  color: var(--j-muted);
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+  padding: 5px 7px;
+  transition: color 0.15s, background 0.15s, border-color 0.15s;
+}
+
+.jarvis-btn-icon:hover {
+  color: #f8fafc;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.jarvis-btn-icon.jarvis-btn-on {
+  color: #fff;
+  border-color: var(--j-accent);
+  background: rgba(108, 92, 231, 0.28);
+}
+
+/* ---------------- Status bar ---------------- */
+.jarvis-status {
+  flex: 0 0 auto;
+  padding: 7px 16px;
+  font-size: 11.5px;
+  letter-spacing: 0.2px;
+  color: var(--j-muted);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  transition: color 0.2s, background 0.2s;
+}
+
+.jarvis-status-idle {
+  color: var(--j-muted);
+}
+
+.jarvis-status-active {
+  color: #cfe0ff;
+  background: rgba(108, 92, 231, 0.16);
+}
+
+.jarvis-status-error {
+  color: #ffd2d2;
+  background: rgba(239, 68, 68, 0.16);
+}
+
+/* ---------------- Messages ---------------- */
+.jarvis-messages {
+  flex: 1 1 auto;
+  padding: 16px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  scroll-behavior: smooth;
+}
+
+.jarvis-messages::-webkit-scrollbar {
+  width: 6px;
+}
+.jarvis-messages::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 3px;
+}
+.jarvis-messages::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.jarvis-msg {
+  max-width: 86%;
+  padding: 10px 14px;
+  border-radius: 14px;
+  font-size: 13px;
+  line-height: 1.55;
+  word-wrap: break-word;
+  overflow-wrap: anywhere;
+  animation: jarvis-msg-in 0.2s ease;
+}
+
+@keyframes jarvis-msg-in {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: none; }
+}
+
+.jarvis-msg-bot {
+  align-self: flex-start;
+  color: #e6e9f2;
+  background: rgba(32, 35, 52, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom-left-radius: 5px;
+}
+
+.jarvis-msg-user {
+  align-self: flex-end;
+  color: #ffffff;
+  background: linear-gradient(135deg, var(--j-accent), var(--j-accent-2));
+  border-bottom-right-radius: 5px;
+  box-shadow: 0 6px 18px rgba(108, 92, 231, 0.35);
+}
+
+.jarvis-msg strong {
+  color: #ffffff;
+  font-weight: 700;
+}
+
+/* ---------------- Composer ---------------- */
+.jarvis-footer {
+  flex: 0 0 auto;
+  padding: 12px 14px 14px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.03);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.jarvis-input {
+  flex: 1;
+  min-width: 0;
+  padding: 9px 12px;
+  font-size: 13px;
+  color: var(--j-text);
+  background: rgba(10, 11, 18, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  outline: none;
+  transition: border-color 0.18s, box-shadow 0.18s;
+}
+
+.jarvis-input::placeholder {
+  color: #6b7188;
+}
+
+.jarvis-input:focus {
+  border-color: var(--j-accent);
+  box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.22);
+}
+
+.jarvis-send-btn {
+  flex: 0 0 auto;
+  padding: 9px 15px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(135deg, var(--j-accent), var(--j-accent-2));
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: filter 0.15s, box-shadow 0.15s;
+}
+
+.jarvis-send-btn:hover {
+  filter: brightness(1.08);
+  box-shadow: 0 6px 18px rgba(108, 92, 231, 0.45);
+}
+
+.jarvis-mic-btn {
+  flex: 0 0 auto;
+  padding: 8px 10px;
+  font-size: 14px;
+  line-height: 1;
+  color: var(--j-text);
+  background: rgba(10, 11, 18, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: border-color 0.18s, background 0.18s, box-shadow 0.18s;
+}
+
+.jarvis-mic-btn:hover {
+  border-color: var(--j-accent);
+}
+
+/* Engine switched on — waiting for the wake word */
+.jarvis-mic-btn.jarvis-on {
+  border-color: var(--j-up);
+  background: rgba(34, 197, 94, 0.18);
+  box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.5);
+}
+
+/* Actively capturing a command — pulsing ring */
+.jarvis-mic-btn.jarvis-capturing {
+  border-color: var(--j-danger);
+  background: rgba(239, 68, 68, 0.22);
+  animation: jarvis-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes jarvis-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.5); }
+  50% { box-shadow: 0 0 0 7px rgba(239, 68, 68, 0); }
+}
